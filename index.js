@@ -65,7 +65,7 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
     }
 
     // Convert date to yyyy-mm-dd format
-    const formattedDate = date ? new Date(date).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10);
+    const formattedDate = date ? new Date(date).toDateString() : new Date().toDateString();
 
     let exerciseObj = {
       userId: userId,
@@ -77,6 +77,7 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
     let newExercise = new exerciseModel(exerciseObj);
     let savedExercise = await newExercise.save();
 
+    // Update the response to include user details
     res.json({
       _id: userFound._id,
       username: userFound.username,
