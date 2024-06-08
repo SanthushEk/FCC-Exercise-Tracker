@@ -98,7 +98,7 @@ app.get('/api/users/:_id/logs', async (req, res) => {
   let userId = req.params._id;
 
   // If limit param exists set it to an integer
-  limitParam = limitParam ? parseInt(limitParam): limitParam
+  limitParam = limitParam ? parseInt(limitParam) : limitParam;
 
   try {
     let userFound = await userModel.findById(userId);
@@ -128,12 +128,7 @@ app.get('/api/users/:_id/logs', async (req, res) => {
 
     let exercises = await exercisesQuery.exec();
 
-    let resObj = {
-      _id: userFound._id,
-      username: userFound.username
-    };
-
-    exercises = exercises.map((x) => {
+    let log = exercises.map((x) => {
       return {
         description: x.description,
         duration: x.duration,
@@ -141,10 +136,16 @@ app.get('/api/users/:_id/logs', async (req, res) => {
       };
     });
 
-    resObj.log = exercises;
-    resObj.count = exercises.length;
+    let count = log.length;
 
-    res.json(resObj);
+    let responseObj = {
+      _id: userFound._id,
+      username: userFound.username,
+      count: count,
+      log: log
+    };
+
+    res.json(responseObj);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
